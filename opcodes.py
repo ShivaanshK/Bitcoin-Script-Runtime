@@ -1,8 +1,7 @@
-global_stack = None
+import stack
 
-def set_global_stack(stack):
-    global global_stack
-    global_stack = stack
+global_stack: stack.Stack = stack.Stack()
+
 
 def OP_0_impl() -> None:
 	global_stack.push(0)
@@ -13,17 +12,14 @@ def OP_FALSE_impl() -> None:
 
 
 def OP_PUSHDATA1_impl() -> None:
-	
 	return
 
 
 def OP_PUSHDATA2_impl() -> None:
-	
 	return
 
 
 def OP_PUSHDATA4_impl() -> None:
-	
 	return
 
 
@@ -32,7 +28,6 @@ def OP_1NEGATE_impl() -> None:
 
 
 def OP_RESERVED_impl() -> None:
-	
 	return
 
 
@@ -95,6 +90,7 @@ def OP_13_impl() -> None:
 def OP_14_impl() -> None:
 	global_stack.push("14")
 
+
 def OP_15_impl() -> None:
 	global_stack.push("15")
 
@@ -104,42 +100,34 @@ def OP_16_impl() -> None:
 
 
 def OP_NOP_impl() -> None:
-	
 	return
 
 
 def OP_VER_impl() -> None:
-	
 	return
 
 
 def OP_IF_impl() -> None:
-	
 	return
 
 
 def OP_NOTIF_impl() -> None:
-	
 	return
 
 
 def OP_VERIF_impl() -> None:
-	
 	return
 
 
 def OP_VERNOTIF_impl() -> None:
-	
 	return
 
 
 def OP_ELSE_impl() -> None:
-	
 	return
 
 
 def OP_ENDIF_impl() -> None:
-	
 	return
 
 
@@ -152,17 +140,14 @@ def OP_VERIFY_impl() -> None:
 
 
 def OP_RETURN_impl() -> None:
-	
 	return
 
 
 def OP_TOALTSTACK_impl() -> None:
-	
 	return
 
 
 def OP_FROMALTSTACK_impl() -> None:
-	
 	return
 
 
@@ -193,22 +178,18 @@ def OP_3DUP_impl() -> None:
 
 
 def OP_2OVER_impl() -> None:
-	
 	return
 
 
 def OP_2ROT_impl() -> None:
-	
 	return
 
 
 def OP_2SWAP_impl() -> None:
-	
 	return
 
 
 def OP_IFDUP_impl() -> None:
-	
 	return
 
 
@@ -242,12 +223,10 @@ def OP_OVER_impl() -> None:
 
 
 def OP_PICK_impl() -> None:
-	
 	return
 
 
 def OP_ROLL_impl() -> None:
-	
 	return
 
 
@@ -276,47 +255,38 @@ def OP_TUCK_impl() -> None:
 
 
 def OP_CAT_impl() -> None:
-	
 	return
 
 
 def OP_SUBSTR_impl() -> None:
-	
 	return
 
 
 def OP_LEFT_impl() -> None:
-	
 	return
 
 
 def OP_RIGHT_impl() -> None:
-	
 	return
 
 
 def OP_SIZE_impl() -> None:
-	
 	return
 
 
 def OP_INVERT_impl() -> None:
-	
 	return
 
 
 def OP_AND_impl() -> None:
-	
 	return
 
 
 def OP_OR_impl() -> None:
-	
 	return
 
 
 def OP_XOR_impl() -> None:
-	
 	return
 
 
@@ -328,48 +298,41 @@ def OP_EQUAL_impl() -> None:
 	else:
 		OP_0_impl()
 
+
 def OP_EQUALVERIFY_impl() -> None:
 	OP_EQUAL_impl()
 	OP_VERIFY_impl()
 
 
 def OP_RESERVED1_impl() -> None:
-	
 	return
 
 
 def OP_RESERVED2_impl() -> None:
-	
 	return
 
 
 def OP_1ADD_impl() -> None:
-	
 	return
 
 
 def OP_1SUB_impl() -> None:
-	
 	return
 
 
 def OP_2MUL_impl() -> None:
-	
 	return
 
 
 def OP_2DIV_impl() -> None:
-	
 	return
 
 
 def OP_NEGATE_impl() -> None:
-	
 	return
 
 
 def OP_ABS_impl() -> None:
-	
 	return
 
 
@@ -386,7 +349,6 @@ def OP_NOT_impl() -> None:
 
 
 def OP_0NOTEQUAL_impl() -> None:
-	
 	return
 
 
@@ -415,28 +377,24 @@ def OP_SUB_impl() -> None:
 
 
 def OP_MUL_impl() -> None:
-	
 	return
 
 
 def OP_DIV_impl() -> None:
-	
 	return
 
 
 def OP_MOD_impl() -> None:
-	
 	return
 
 
 def OP_LSHIFT_impl() -> None:
-	
 	return
 
 
 def OP_RSHIFT_impl() -> None:
-	
 	return
+
 
 def convert_to_bool(stack_item: str) -> bool:
 	try:
@@ -446,6 +404,7 @@ def convert_to_bool(stack_item: str) -> bool:
 		return True
 	except:
 		return True
+
 
 def OP_BOOLAND_impl() -> None:
 	top_item: str = global_stack.pop()
@@ -466,177 +425,146 @@ def OP_BOOLOR_impl() -> None:
 	else:
 		OP_0_impl()
 
+
 def OP_NUMEQUAL_impl() -> None:
-	
 	return
 
 
 def OP_NUMEQUALVERIFY_impl() -> None:
-	
 	return
 
 
 def OP_NUMNOTEQUAL_impl() -> None:
-	
 	return
 
 
 def OP_LESSTHAN_impl() -> None:
-	
 	return
 
 
 def OP_GREATERTHAN_impl() -> None:
-	
 	return
 
 
 def OP_LESSTHANOREQUAL_impl() -> None:
-	
 	return
 
 
 def OP_GREATERTHANOREQUAL_impl() -> None:
-	
 	return
 
 
 def OP_MIN_impl() -> None:
-	
 	return
 
 
 def OP_MAX_impl() -> None:
-	
 	return
 
 
 def OP_WITHIN_impl() -> None:
-	
 	return
 
 
 def OP_RIPEMD160_impl() -> None:
-	
 	return
 
 
 def OP_SHA1_impl() -> None:
-	
 	return
 
 
 def OP_SHA256_impl() -> None:
-	
 	return
 
 
 def OP_HASH160_impl() -> None:
-	
 	return
 
 
 def OP_HASH256_impl() -> None:
-	
 	return
 
 
 def OP_CODESEPARATOR_impl() -> None:
-	
 	return
 
 
 def OP_CHECKSIG_impl() -> None:
-	
 	return
 
 
 def OP_CHECKSIGVERIFY_impl() -> None:
-	
 	return
 
 
 def OP_CHECKMULTISIG_impl() -> None:
-	
 	return
 
 
 def OP_CHECKMULTISIGVERIFY_impl() -> None:
-	
 	return
 
 
 def OP_NOP1_impl() -> None:
-	
 	return
 
 
 def OP_CHECKLOCKTIMEVERIFY_impl() -> None:
-	
 	return
 
 
 def OP_NOP2_impl() -> None:
-	
 	return
 
 
 def OP_CHECKSEQUENCEVERIFY_impl() -> None:
-	
 	return
 
 
 def OP_NOP3_impl() -> None:
-	
 	return
 
 
 def OP_NOP4_impl() -> None:
-	
 	return
 
 
 def OP_NOP5_impl() -> None:
-	
 	return
 
 
 def OP_NOP6_impl() -> None:
-	
 	return
 
 
 def OP_NOP7_impl() -> None:
-	
 	return
 
 
 def OP_NOP8_impl() -> None:
-	
 	return
 
 
 def OP_NOP9_impl() -> None:
-	
 	return
 
 
 def OP_NOP10_impl() -> None:
-	
 	return
 
 
 def OP_CHECKSIGADD_impl() -> None:
-	
 	return
 
 
 def OP_INVALIDOPCODE_impl() -> None:
-	
 	return
+
 
 def is_opcode(opcode: str) -> bool:
 	return opcode in OPCODES
+
 
 OPCODES = {
 	'OP_0': OP_0_impl,
