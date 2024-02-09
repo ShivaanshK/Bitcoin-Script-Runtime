@@ -4,7 +4,7 @@ global_stack: stack.Stack = stack.Stack()
 
 
 def OP_0_impl() -> None:
-	global_stack.push(0)
+	global_stack.push("0")
 
 
 def OP_FALSE_impl() -> None:
