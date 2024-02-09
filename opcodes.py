@@ -167,18 +167,29 @@ def OP_FROMALTSTACK_impl() -> None:
 
 
 def OP_2DROP_impl() -> None:
-	
-	return
+	global_stack.pop()
+	global_stack.pop()
 
 
 def OP_2DUP_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
 
 
 def OP_3DUP_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	top_item_3: str = global_stack.pop()
+	global_stack.push(top_item_3)
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
+	global_stack.push(top_item_3)
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
 
 
 def OP_2OVER_impl() -> None:
@@ -202,13 +213,12 @@ def OP_IFDUP_impl() -> None:
 
 
 def OP_DEPTH_impl() -> None:
-	
-	return
+	depth: int = global_stack.depth()
+	global_stack.push(str(depth))
 
 
 def OP_DROP_impl() -> None:
-	
-	return
+	global_stack.pop()
 
 
 def OP_DUP_impl() -> None:
@@ -218,8 +228,9 @@ def OP_DUP_impl() -> None:
 
 
 def OP_NIP_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	global_stack.pop()
+	global_stack.push(top_item)
 
 
 def OP_OVER_impl() -> None:
@@ -238,18 +249,27 @@ def OP_ROLL_impl() -> None:
 
 
 def OP_ROT_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	top_item_3: str = global_stack.pop()
+	global_stack.push(top_item)
+	global_stack.push(top_item_3)
+	global_stack.push(top_item)
 
 
 def OP_SWAP_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	global_stack.push(top_item)
+	global_stack.push(top_item_2)
 
 
 def OP_TUCK_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
+	global_stack.push(top_item_2)
 
 
 def OP_CAT_impl() -> None:
@@ -396,14 +416,17 @@ def OP_RSHIFT_impl() -> None:
 
 
 def OP_BOOLAND_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	bool_result = bool(top_item) and bool(top_item_2)
+	global_stack.push(bool_result)
 
 
 def OP_BOOLOR_impl() -> None:
-	
-	return
-
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	bool_result = bool(top_item) or bool(top_item_2)
+	global_stack.push(bool_result)
 
 def OP_NUMEQUAL_impl() -> None:
 	
@@ -575,7 +598,7 @@ def OP_INVALIDOPCODE_impl() -> None:
 	return
 
 def is_opcode(opcode: str) -> bool:
-	return opcode in OPCODES.keys()
+	return opcode in OPCODES
 
 OPCODES = {
 	'OP_0': OP_0_impl,

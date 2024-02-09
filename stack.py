@@ -11,6 +11,9 @@ class Stack:
         if self.empty():
             raise IndexError("pop from an empty stack")
         return self.contents.pop()
+    
+    def depth(self) -> int:
+        return len(self.contents)
 
     def empty(self) -> bool:
         return len(self.contents) == 0
