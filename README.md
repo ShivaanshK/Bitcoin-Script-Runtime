@@ -58,7 +58,7 @@ Replace `requirements.txt` with the path to a file containing a list of items to
 ### Running the Project
 
 ```sh
-pypy3 main.py \<YOUR SCRIPT FILE\>
+pypy3 main.py <YOUR SCRIPT FILE>
 ```
 
 ### Deactivating the Virtual Environment
