@@ -593,6 +593,7 @@ def OP_WITHIN_impl() -> None:
 		pass
 	global_stack.push(result)
 
+######### Crypto ############
 
 def OP_RIPEMD160_impl() -> None:
 	top_item: str = global_stack.pop()
