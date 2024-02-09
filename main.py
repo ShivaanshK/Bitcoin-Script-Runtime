@@ -4,12 +4,12 @@ import sys
 import stack, opcodes
 
 MAIN_STACK = stack.Stack()
-
+opcodes.set_global_stack(MAIN_STACK)
 
 #  return list of each instruction in the program
 def read_script(filename: str) -> list[tuple[str]]:
     with open(filename, 'r') as f:
-        return [instr for instr in f]
+        return f.read().split()
 
 
 def dispatch(opc: str):
@@ -21,10 +21,11 @@ def main(argv: list[str]) -> int:
     print(prog)
 
     for instr in prog:
+        print(instr)
         if opcodes.is_opcode(instr):
             dispatch(instr)
         else:
-            MAIN_STACK.push_val(instr)
+            MAIN_STACK.push(instr)
         print(MAIN_STACK)
 
     return 0

@@ -1,11 +1,15 @@
+global_stack = None
+
+def set_global_stack(stack):
+    global global_stack
+    global_stack = stack
+
 def OP_0_impl() -> None:
-	
-	return
+	global_stack.push(b"")
 
 
 def OP_FALSE_impl() -> None:
-	
-	return
+	OP_0_impl()
 
 
 def OP_PUSHDATA1_impl() -> None:
@@ -24,8 +28,7 @@ def OP_PUSHDATA4_impl() -> None:
 
 
 def OP_1NEGATE_impl() -> None:
-	
-	return
+	global_stack.push("-1")
 
 
 def OP_RESERVED_impl() -> None:
@@ -34,88 +37,70 @@ def OP_RESERVED_impl() -> None:
 
 
 def OP_1_impl() -> None:
-	
-	return
+	global_stack.push("1")
 
 
 def OP_TRUE_impl() -> None:
-	
-	return
+	OP_1_impl()
 
 
 def OP_2_impl() -> None:
-	
-	return
+	global_stack.push("2")
 
 
 def OP_3_impl() -> None:
-	
-	return
+	global_stack.push("3")
 
 
 def OP_4_impl() -> None:
-	
-	return
+	global_stack.push("4")
 
 
 def OP_5_impl() -> None:
-	
-	return
+	global_stack.push("5")
 
 
 def OP_6_impl() -> None:
-	
-	return
+	global_stack.push("6")
 
 
 def OP_7_impl() -> None:
-	
-	return
+	global_stack.push("7")
 
 
 def OP_8_impl() -> None:
-	
-	return
+	global_stack.push("8")
 
 
 def OP_9_impl() -> None:
-	
-	return
+	global_stack.push("9")
 
 
 def OP_10_impl() -> None:
-	
-	return
+	global_stack.push("10")
 
 
 def OP_11_impl() -> None:
-	
-	return
+	global_stack.push("11")
 
 
 def OP_12_impl() -> None:
-	
-	return
+	global_stack.push("12")
 
 
 def OP_13_impl() -> None:
-	
-	return
+	global_stack.push("13")
 
 
 def OP_14_impl() -> None:
-	
-	return
-
+	global_stack.push("14")
 
 def OP_15_impl() -> None:
-	
-	return
+	global_stack.push("15")
 
 
 def OP_16_impl() -> None:
-	
-	return
+	global_stack.push("16")
 
 
 def OP_NOP_impl() -> None:
@@ -159,8 +144,11 @@ def OP_ENDIF_impl() -> None:
 
 
 def OP_VERIFY_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	if top_item:
+		return
+	else:
+		raise "INVALID TRANSACTION"
 
 
 def OP_RETURN_impl() -> None:
@@ -224,8 +212,9 @@ def OP_DROP_impl() -> None:
 
 
 def OP_DUP_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	global_stack.push(top_item)
+	global_stack.push(top_item)
 
 
 def OP_NIP_impl() -> None:
@@ -309,13 +298,16 @@ def OP_XOR_impl() -> None:
 
 
 def OP_EQUAL_impl() -> None:
-	
-	return
-
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	if (top_item == top_item_2):
+		OP_1_impl()
+	else:
+		OP_0_impl()
 
 def OP_EQUALVERIFY_impl() -> None:
-	
-	return
+	OP_EQUAL_impl()
+	OP_VERIFY_impl()
 
 
 def OP_RESERVED1_impl() -> None:
@@ -583,7 +575,7 @@ def OP_INVALIDOPCODE_impl() -> None:
 	return
 
 def is_opcode(opcode: str) -> bool:
-	return opcode in OPCODES
+	return opcode in OPCODES.keys()
 
 OPCODES = {
 	'OP_0': OP_0_impl,
