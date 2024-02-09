@@ -414,18 +414,28 @@ def OP_RSHIFT_impl() -> None:
 	
 	return
 
+def convert_to_bool(stack_item: str) -> bool:
+	try:
+		if stack_item == b"":
+			return False
+		item_to_int = int(stack_item)
+		if (item_to_int == 0):
+			return False
+		return True
+	except:
+		return True
 
 def OP_BOOLAND_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
-	bool_result = bool(top_item) and bool(top_item_2)
+	bool_result = convert_to_bool(top_item) and convert_to_bool(top_item_2)
 	global_stack.push(bool_result)
 
 
 def OP_BOOLOR_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
-	bool_result = bool(top_item) or bool(top_item_2)
+	bool_result = convert_to_bool(top_item) or convert_to_bool(top_item_2)
 	global_stack.push(bool_result)
 
 def OP_NUMEQUAL_impl() -> None:
