@@ -1,4 +1,5 @@
 import stack
+from Crypto.Hash import RIPEMD160, SHA256, SHA1
 
 global_stack: stack.Stack = stack.Stack()
 
@@ -467,7 +468,10 @@ def OP_WITHIN_impl() -> None:
 
 
 def OP_RIPEMD160_impl() -> None:
-	return
+	top_item: str = global_stack.pop()
+	hash = RIPEMD160.new()
+	hash.update(bytes(top_item.encode("utf-8")))
+	global_stack.push(hash.hexdigest())
 
 
 def OP_SHA1_impl() -> None:
@@ -475,7 +479,10 @@ def OP_SHA1_impl() -> None:
 
 
 def OP_SHA256_impl() -> None:
-	return
+	top_item: str = global_stack.pop()
+	hash = SHA256.new()
+	hash.update(bytes(top_item.encode("utf-8")))
+	global_stack.push(hash.hexdigest())
 
 
 def OP_HASH160_impl() -> None:
