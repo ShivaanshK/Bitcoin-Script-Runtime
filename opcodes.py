@@ -4,6 +4,11 @@ from Crypto.Hash import RIPEMD160, SHA256, SHA1
 global_stack: stack.Stack = stack.Stack()
 alt_stack: stack.Stack = stack.Stack()
 
+def encode_stack_element(value: str) -> bytes:
+    if value.startswith("0x"):
+        return bytes.fromhex(value[2:])
+    else:
+        return value.encode("utf-8")
 
 def OP_0_impl() -> None:
 	global_stack.push("0")
@@ -592,27 +597,32 @@ def OP_WITHIN_impl() -> None:
 def OP_RIPEMD160_impl() -> None:
 	top_item: str = global_stack.pop()
 	hash = RIPEMD160.new()
-	hash.update(bytes(top_item.encode("utf-8")))
-	global_stack.push(hash.hexdigest())
+	hash.update(encode_stack_element(top_item))
+	global_stack.push("0x" + hash.hexdigest())
 
 
 def OP_SHA1_impl() -> None:
-	return
+	top_item: str = global_stack.pop()
+	hash = SHA1.new()
+	hash.update(encode_stack_element(top_item))
+	global_stack.push("0x" + hash.hexdigest())
 
 
 def OP_SHA256_impl() -> None:
 	top_item: str = global_stack.pop()
 	hash = SHA256.new()
-	hash.update(bytes(top_item.encode("utf-8")))
-	global_stack.push(hash.hexdigest())
+	hash.update(encode_stack_element(top_item))
+	global_stack.push("0x" + hash.hexdigest())
 
 
 def OP_HASH160_impl() -> None:
-	return
+	OP_HASH256_impl()
+	OP_RIPEMD160_impl()
 
 
 def OP_HASH256_impl() -> None:
-	return
+	OP_HASH256_impl()
+	OP_HASH256_impl()
 
 
 def OP_CODESEPARATOR_impl() -> None:
