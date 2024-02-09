@@ -5,7 +5,7 @@ def set_global_stack(stack):
     global_stack = stack
 
 def OP_0_impl() -> None:
-	global_stack.push(b"")
+	global_stack.push(0)
 
 
 def OP_FALSE_impl() -> None:
@@ -375,9 +375,6 @@ def OP_ABS_impl() -> None:
 
 def OP_NOT_impl() -> None:
 	top_item: str = global_stack.pop()
-	if (top_item == b""):
-		OP_1_impl()
-		return
 	try:
 		item_to_int: int = int(top_item)
 		if item_to_int == 0:
@@ -443,8 +440,6 @@ def OP_RSHIFT_impl() -> None:
 
 def convert_to_bool(stack_item: str) -> bool:
 	try:
-		if stack_item == b"":
-			return False
 		item_to_int = int(stack_item)
 		if (item_to_int == 0):
 			return False
@@ -456,14 +451,20 @@ def OP_BOOLAND_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
 	bool_result = convert_to_bool(top_item) and convert_to_bool(top_item_2)
-	global_stack.push(bool_result)
+	if bool_result:
+		OP_1_impl()
+	else:
+		OP_0_impl()
 
 
 def OP_BOOLOR_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
 	bool_result = convert_to_bool(top_item) or convert_to_bool(top_item_2)
-	global_stack.push(bool_result)
+	if bool_result:
+		OP_1_impl()
+	else:
+		OP_0_impl()
 
 def OP_NUMEQUAL_impl() -> None:
 	
