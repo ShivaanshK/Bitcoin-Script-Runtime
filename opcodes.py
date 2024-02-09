@@ -582,6 +582,8 @@ def OP_INVALIDOPCODE_impl() -> None:
 	
 	return
 
+def is_opcode(opcode: str) -> bool:
+	return opcode in OPCODES
 
 OPCODES = {
 	'OP_0': OP_0_impl,
