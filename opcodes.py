@@ -148,7 +148,7 @@ def OP_VERIFY_impl() -> None:
 	if top_item:
 		return
 	else:
-		raise "INVALID TRANSACTION"
+		raise ValueError("INVALID TRANSACTION - OP_VERIFY returned FALSE")
 
 
 def OP_RETURN_impl() -> None:
@@ -234,8 +234,11 @@ def OP_NIP_impl() -> None:
 
 
 def OP_OVER_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	global_stack.push(top_item_2)
+	global_stack.push(top_item)
+	global_stack.push(top_item_2)
 
 
 def OP_PICK_impl() -> None:
@@ -252,9 +255,9 @@ def OP_ROT_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
 	top_item_3: str = global_stack.pop()
+	global_stack.push(top_item_2)
 	global_stack.push(top_item)
 	global_stack.push(top_item_3)
-	global_stack.push(top_item)
 
 
 def OP_SWAP_impl() -> None:
@@ -267,9 +270,9 @@ def OP_SWAP_impl() -> None:
 def OP_TUCK_impl() -> None:
 	top_item: str = global_stack.pop()
 	top_item_2: str = global_stack.pop()
-	global_stack.push(top_item_2)
 	global_stack.push(top_item)
 	global_stack.push(top_item_2)
+	global_stack.push(top_item)
 
 
 def OP_CAT_impl() -> None:
@@ -371,8 +374,18 @@ def OP_ABS_impl() -> None:
 
 
 def OP_NOT_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	if (top_item == b""):
+		OP_1_impl()
+		return
+	try:
+		item_to_int: int = int(top_item)
+		if item_to_int == 0:
+			OP_1_impl()
+		else:
+			OP_0_impl()
+	except:
+		OP_0_impl()
 
 
 def OP_0NOTEQUAL_impl() -> None:
@@ -381,13 +394,27 @@ def OP_0NOTEQUAL_impl() -> None:
 
 
 def OP_ADD_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	try:
+		item_to_int: int = int(top_item)
+		item_to_int_2: int = int(top_item_2)
+		sum: int = item_to_int + item_to_int_2
+		global_stack.push(str(sum))
+	except:
+		raise ValueError("INVALID TYPES FOR OP_ADD")
 
 
 def OP_SUB_impl() -> None:
-	
-	return
+	top_item: str = global_stack.pop()
+	top_item_2: str = global_stack.pop()
+	try:
+		item_to_int: int = int(top_item)
+		item_to_int_2: int = int(top_item_2)
+		difference: int = item_to_int_2 - item_to_int
+		global_stack.push(str(difference))
+	except:
+		raise ValueError("INVALID TYPES FOR OP_SUB")
 
 
 def OP_MUL_impl() -> None:
