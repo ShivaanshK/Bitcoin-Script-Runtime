@@ -2,6 +2,7 @@ import stack
 from Crypto.Hash import RIPEMD160, SHA256, SHA1
 
 global_stack: stack.Stack = stack.Stack()
+alt_stack: stack.Stack = stack.Stack()
 
 
 def OP_0_impl() -> None:
@@ -144,12 +145,14 @@ def OP_RETURN_impl() -> None:
 	return
 
 
+########## STACK ##############
+
 def OP_TOALTSTACK_impl() -> None:
-	return
+	alt_stack.push(global_stack.pop())
 
 
 def OP_FROMALTSTACK_impl() -> None:
-	return
+	global_stack.push(alt_stack.pop())
 
 
 def OP_2DROP_impl() -> None:
@@ -179,19 +182,24 @@ def OP_3DUP_impl() -> None:
 
 
 def OP_2OVER_impl() -> None:
-	return
+	x4, x3, x2, x1 = global_stack.pop_multi(4)
+	global_stack.push_multi(x1, x2, x3, x4, x1, x2)
 
 
 def OP_2ROT_impl() -> None:
-	return
+	x6, x5, x4, x3, x2, x1 = global_stack.pop_multi(6)
+	global_stack.push_multi(x3, x4, x5, x6, x1, x2)
 
 
 def OP_2SWAP_impl() -> None:
-	return
+	x4, x3, x2, x1 = global_stack.pop_multi(4)
+	global_stack.push_multi(x3, x4, x1, x2)
 
 
 def OP_IFDUP_impl() -> None:
-	return
+	x = global_stack.top()
+	if x != '0':
+		global_stack.push(x)
 
 
 def OP_DEPTH_impl() -> None:
@@ -224,11 +232,16 @@ def OP_OVER_impl() -> None:
 
 
 def OP_PICK_impl() -> None:
-	return
+	narg = global_stack.pop()
+	n = to_int(narg)
+	global_stack.push(global_stack.contents[-1 - n])
 
 
 def OP_ROLL_impl() -> None:
-	return
+	narg = global_stack.pop()
+	n = to_int(narg)
+	new_top = global_stack.contents.pop(-1 - n)
+	global_stack.push(new_top)
 
 
 def OP_ROT_impl() -> None:
@@ -255,6 +268,7 @@ def OP_TUCK_impl() -> None:
 	global_stack.push(top_item)
 
 
+######### Splice ############
 def OP_CAT_impl() -> None:
 	return
 
@@ -313,34 +327,52 @@ def OP_RESERVED2_impl() -> None:
 	return
 
 
+########### Arithmetic ##############
+def to_int(i: str) -> int:
+	try:
+		return int(i)
+	except ValueError:
+		raise ValueError(f"INVALID OPERAND: {i}")
+
+
 def OP_1ADD_impl() -> None:
+	i = to_int(global_stack.pop())
+	global_stack.push(str(i + 1))
 	return
 
 
 def OP_1SUB_impl() -> None:
+	i = to_int(global_stack.pop())
+	global_stack.push(str(i - 1))
 	return
 
 
 def OP_2MUL_impl() -> None:
+	# disabled
 	return
 
 
 def OP_2DIV_impl() -> None:
+	# disabled
 	return
 
 
 def OP_NEGATE_impl() -> None:
+	i = to_int(global_stack.pop())
+	global_stack.push(str(-1 * i))
 	return
 
 
 def OP_ABS_impl() -> None:
+	i = to_int(global_stack.pop())
+	global_stack.push(str(abs(i)))
 	return
 
 
 def OP_NOT_impl() -> None:
 	top_item: str = global_stack.pop()
 	try:
-		item_to_int: int = int(top_item)
+		item_to_int = to_int(top_item)
 		if item_to_int == 0:
 			OP_1_impl()
 		else:
@@ -350,7 +382,8 @@ def OP_NOT_impl() -> None:
 
 
 def OP_0NOTEQUAL_impl() -> None:
-	return
+	inp = global_stack.pop()
+	global_stack.push("0" if inp == "0" else "1")
 
 
 def OP_ADD_impl() -> None:
@@ -378,22 +411,27 @@ def OP_SUB_impl() -> None:
 
 
 def OP_MUL_impl() -> None:
+	# disabled
 	return
 
 
 def OP_DIV_impl() -> None:
+	# disabled
 	return
 
 
 def OP_MOD_impl() -> None:
+	# disabled
 	return
 
 
 def OP_LSHIFT_impl() -> None:
+	# disabled
 	return
 
 
 def OP_RSHIFT_impl() -> None:
+	# disabled
 	return
 
 
@@ -428,43 +466,127 @@ def OP_BOOLOR_impl() -> None:
 
 
 def OP_NUMEQUAL_impl() -> None:
-	return
+	arg1 = global_stack.pop()
+	arg2 = global_stack.pop()
+	result = "0"
+	try:
+		num1 = to_int(arg1)
+		num2 = to_int(arg2)
+		result = "1" if num1 == num2 else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_NUMEQUALVERIFY_impl() -> None:
-	return
+	OP_NUMEQUAL_impl()
+	OP_VERIFY_impl()
 
 
 def OP_NUMNOTEQUAL_impl() -> None:
-	return
+	arg1 = global_stack.pop()
+	arg2 = global_stack.pop()
+	result = "1"
+	try:
+		num1 = to_int(arg1)
+		num2 = to_int(arg2)
+		result = "0" if num1 == num2 else "1"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_LESSTHAN_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = "1" if a < b else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_GREATERTHAN_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = "1" if a > b else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_LESSTHANOREQUAL_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = "1" if a <= b else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_GREATERTHANOREQUAL_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = "1" if a >= b else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_MIN_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = str(min(a, b))
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_MAX_impl() -> None:
-	return
+	barg = global_stack.pop()
+	aarg = global_stack.pop()
+	result = "0"
+	try:
+		a = to_int(aarg)
+		b = to_int(barg)
+		result = str(max(a, b))
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_WITHIN_impl() -> None:
-	return
+	maxarg = global_stack.pop()
+	minarg = global_stack.pop()
+	xarg = global_stack.pop()
+	result = "0"
+	try:
+		max = to_int(maxarg)
+		min = to_int(minarg)
+		x = to_int(xarg)
+		result = "1" if min <= x < max else "0"
+	except ValueError:
+		pass
+	global_stack.push(result)
 
 
 def OP_RIPEMD160_impl() -> None:
