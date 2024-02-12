@@ -594,7 +594,6 @@ def OP_WITHIN_impl() -> None:
 	global_stack.push(result)
 
 ######### Crypto ############
-
 def OP_RIPEMD160_impl() -> None:
 	top_item: str = global_stack.pop()
 	hash = RIPEMD160.new()
@@ -617,13 +616,13 @@ def OP_SHA256_impl() -> None:
 
 
 def OP_HASH160_impl() -> None:
-	OP_HASH256_impl()
+	OP_SHA256_impl()
 	OP_RIPEMD160_impl()
 
 
 def OP_HASH256_impl() -> None:
-	OP_HASH256_impl()
-	OP_HASH256_impl()
+	OP_SHA256_impl()
+	OP_SHA256_impl()
 
 
 def OP_CODESEPARATOR_impl() -> None:
