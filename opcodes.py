@@ -140,7 +140,7 @@ def OP_ENDIF_impl() -> None:
 
 def OP_VERIFY_impl() -> None:
 	top_item: str = global_stack.pop()
-	if top_item:
+	if convert_to_bool(top_item):
 		return
 	else:
 		raise ValueError("INVALID TRANSACTION - OP_VERIFY returned FALSE")
