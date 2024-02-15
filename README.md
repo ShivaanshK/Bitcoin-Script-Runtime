@@ -1,5 +1,5 @@
 # Bitcoin-Script-Runtime
-Implementation of BTC script in Python for CS 263, Winter '24
+Implementation of the BTC script runtime in Python for CS 263, Winter '24
 
 Bitcoin was the first practical implementation of a public ledger used as an electronic cash system. Bitcoin invented the UTXO (unspent transaction output) model to counter double spending of coins and support divisibility of coins. Each transaction takes in UTXO(s) as input(s) to fund the transaction and creates 1 or more UTXO(s) as output(s) that represent new coins. Once a transaction is mined, the UTXO(s) used as input are marked as spent so they can’t be reused and the output UTXO(s) are spendable in future transactions. UTXOs have 2 key components: amount and script. The amount is the value held by the UTXO in Satoshis (1​​ Satoshi = 10-8 Bitcoin) and the script is a program consisting of opcodes and operands which authenticate the owner of a UTXO. In order to spend a UTXO, a user must provide a valid input script. When combined with the UTXO’s script, this will successfully execute in the Bitcoin script runtime, a simple stack-based execution environment that supports quite complex—but not Turing complete—smart contracts.
 
