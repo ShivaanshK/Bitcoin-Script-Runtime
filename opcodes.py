@@ -17,7 +17,7 @@ def encode_stack_element(value: str) -> bytes:
 
 
 def OP_0_impl() -> None:
-	global_stack.push("0")
+	global_stack.push("")
 
 
 def OP_FALSE_impl() -> None:
@@ -340,6 +340,8 @@ def OP_RESERVED2_impl() -> None:
 
 ########### Arithmetic ##############
 def to_int(i: str) -> int:
+	if i == "":
+		return 0
 	try:
 		return int(i)
 	except ValueError:
@@ -665,7 +667,8 @@ def OP_CHECKMULTISIG_impl() -> None:
 
 
 def OP_CHECKMULTISIGVERIFY_impl() -> None:
-	return
+	OP_CHECKMULTISIG_impl()
+	OP_VERIFY_impl()
 
 
 def OP_NOP1_impl() -> None:
