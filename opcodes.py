@@ -654,7 +654,6 @@ def OP_CHECKSIG_impl() -> None:
 		OP_1_impl()
 	except:
 		OP_0_impl()
-		return
 
 
 def OP_CHECKSIGVERIFY_impl() -> None:
