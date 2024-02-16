@@ -1,14 +1,20 @@
 import stack
 from Crypto.Hash import RIPEMD160, SHA256, SHA1
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.serialization import load_der_public_key
+from cryptography.hazmat.primitives import hashes
+
 
 global_stack: stack.Stack = stack.Stack()
 alt_stack: stack.Stack = stack.Stack()
+
 
 def encode_stack_element(value: str) -> bytes:
     if value.startswith("0x"):
         return bytes.fromhex(value[2:])
     else:
         return value.encode("utf-8")
+
 
 def OP_0_impl() -> None:
 	global_stack.push("0")
@@ -594,6 +600,8 @@ def OP_WITHIN_impl() -> None:
 	global_stack.push(result)
 
 ######### Crypto ############
+
+
 def OP_RIPEMD160_impl() -> None:
 	top_item: str = global_stack.pop()
 	hash = RIPEMD160.new()
@@ -630,11 +638,26 @@ def OP_CODESEPARATOR_impl() -> None:
 
 
 def OP_CHECKSIG_impl() -> None:
-	return
+	public_key_bytes: bytes = encode_stack_element(global_stack.pop())
+	sig_bytes: bytes = encode_stack_element(global_stack.pop())
+
+	public_key: ec.EllipticCurvePublicKey = load_der_public_key(public_key_bytes)
+
+	try:
+		public_key.verify(
+			sig_bytes,
+			b"UTXOs",
+			ec.ECDSA(hashes.SHA256())
+		)
+		OP_1_impl()
+	except:
+		OP_0_impl()
+		return
 
 
 def OP_CHECKSIGVERIFY_impl() -> None:
-	return
+	OP_CHECKSIG_impl()
+	OP_VERIFY_impl()
 
 
 def OP_CHECKMULTISIG_impl() -> None:
