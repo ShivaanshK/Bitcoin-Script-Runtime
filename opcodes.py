@@ -678,6 +678,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 		# Pop Dummy Element
 		global_stack.pop()
 
+		# Check each signature against each public key. A public key can only match one signature.
 		for signature in signatures:
 			success: bool = False
 			for public_key in public_keys:
@@ -688,7 +689,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 						b"UTXOs",
 						ec.ECDSA(hashes.SHA256())
 					)
-					public_keys.remove(public_key)  # A public key successfully used is removed.
+					public_keys.remove(public_key)
 					success = True
 					break
 				except:
