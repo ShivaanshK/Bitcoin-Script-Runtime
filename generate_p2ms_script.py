@@ -1,6 +1,5 @@
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes, serialization
-from Crypto.Hash import RIPEMD160, SHA256
 import sys, random
 
 # N of M Multisig

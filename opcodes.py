@@ -662,8 +662,44 @@ def OP_CHECKSIGVERIFY_impl() -> None:
 
 
 def OP_CHECKMULTISIG_impl() -> None:
-	return
+	try:
+		# Pop Public Keys
+		m: int = int(global_stack.pop())
+		public_keys: list[bytes] = []
+		for i in range(m):
+			public_keys.append(encode_stack_element(global_stack.pop()))
 
+		# Pop Signatures
+		n: int = int(global_stack.pop())
+		signatures: list[bytes] = []
+		for i in range(n):
+			signatures.append(encode_stack_element(global_stack.pop()))
+		
+		# Pop Dummy Element
+		global_stack.pop()
+
+		for signature in signatures:
+			success: bool = False
+			for public_key in public_keys:
+				try:
+					public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_key)
+					public_key_loaded.verify(
+						signature,
+						b"UTXOs",
+						ec.ECDSA(hashes.SHA256())
+					)
+					public_keys.remove(public_key)  # A public key successfully used is removed.
+					success = True
+					break
+				except:
+					pass
+			if not success:
+				raise ValueError("Signature did not match a public key!")
+	
+		OP_1_impl()
+	except:
+		OP_0_impl()
+		
 
 def OP_CHECKMULTISIGVERIFY_impl() -> None:
 	OP_CHECKMULTISIG_impl()
