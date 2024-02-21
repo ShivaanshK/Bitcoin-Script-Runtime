@@ -695,6 +695,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 				pass
 		if not success:
 			OP_0_impl()
+			return
 
 	OP_1_impl()
 	
