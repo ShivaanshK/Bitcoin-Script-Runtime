@@ -681,15 +681,15 @@ def OP_CHECKMULTISIG_impl() -> None:
 		# Check each signature against each public key. A public key can only match one signature.
 		for signature in signatures:
 			success: bool = False
-			for public_key in public_keys:
+			for i in range(m):
 				try:
-					public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_key)
+					public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_keys[i])
 					public_key_loaded.verify(
 						signature,
 						b"UTXOs",
 						ec.ECDSA(hashes.SHA256())
 					)
-					public_keys.remove(public_key)
+					public_keys.pop(i)
 					success = True
 					break
 				except:
