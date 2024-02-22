@@ -674,8 +674,8 @@ def OP_CHECKMULTISIG_impl() -> None:
 	for i in range(n):
 		signatures.append(encode_stack_element(global_stack.pop()))
 	
-	# Pop Dummy Element
-	global_stack.pop()
+	# Pop Dummy Element (our map optimization). If 0: ignore the mapping; Else: use it
+	mapping: str = global_stack.pop()
 
 	# Check each signature against each public key. A public key can only match one signature.
 	for signature in signatures:

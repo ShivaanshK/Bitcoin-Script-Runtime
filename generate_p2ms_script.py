@@ -10,8 +10,8 @@ M = int(sys.argv[2])
 if M < 1 or N < 1:
     print("N and M must be > 1!")
     sys.exit(1)
-if M > 20:
-    print("M can be 20 at max!")
+if M > 3:
+    print("M can be 3 at max!")
     sys.exit(1)
 elif N > M:
     print("N has to be less than M!")
@@ -20,6 +20,7 @@ elif N > M:
 # Generate M keys and N signatures at random
 keys = []
 signatures = []
+mapping = "0x"
 
 for i in range(M):
     private_key = ec.generate_private_key(curve=ec.SECP256K1())
@@ -27,6 +28,8 @@ for i in range(M):
 
 selected_keys = random.sample(keys, N)
 for key in selected_keys:
+    index = keys.index(key)
+    mapping += hex(index)[2:]
     signature = "0x" + key.sign(b"UTXOs", signature_algorithm=ec.ECDSA(hashes.SHA256())).hex()
     signatures.append(signature)
 
@@ -34,7 +37,7 @@ for key in selected_keys:
 public_keys_hex = ["0x" + key.public_key().public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo).hex() for key in keys]
 script_sig = f" {N} " + " ".join(public_keys_hex) + f" {M} OP_CHECKMULTISIG"
 # Dummy Stack element is first element - We will use this to implement a mapping
-script_pub_key = "OP_0 " + " ".join(signatures)
+script_pub_key = f"{mapping} " + " ".join(signatures)
 p2ms = script_pub_key + script_sig
 
 # Write the P2MS script to a file
