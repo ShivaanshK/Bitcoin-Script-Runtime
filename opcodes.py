@@ -471,12 +471,14 @@ def OP_RSHIFT_impl() -> None:
 
 
 def convert_to_bool(stack_item: str) -> bool:
+	if stack_item == '' or stack_item == b'':
+		return False
 	try:
 		item_to_int = int(stack_item)
-		if (item_to_int == 0):
+		if item_to_int == 0:
 			return False
 		return True
-	except:
+	except ValueError:
 		return True
 
 

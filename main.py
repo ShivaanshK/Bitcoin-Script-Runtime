@@ -21,12 +21,11 @@ def dispatch(opc: str):
 def main(argv: list[str]) -> int:
 	prog = read_script(argv[1])
 	for instr in prog:
-		print(instr)
-
 		if not opcodes.ctrl_flow_exec(instr):
 			# ignore statements within a negative IF block
+			print(f'[ignored] {instr}')
 			continue
-
+		print(instr)
 		if opcodes.is_opcode(instr):
 			dispatch(instr)
 		else:
