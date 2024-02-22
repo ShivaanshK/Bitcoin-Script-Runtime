@@ -836,8 +836,6 @@ OPCODES = {
 	'OP_VER': OP_VER_impl,
 	'OP_IF': OP_IF_impl,
 	'OP_NOTIF': OP_NOTIF_impl,
-	'OP_VERIF': OP_VERIF_impl,
-	'OP_VERNOTIF': OP_VERNOTIF_impl,
 	'OP_ELSE': OP_ELSE_impl,
 	'OP_ENDIF': OP_ENDIF_impl,
 	'OP_VERIFY': OP_VERIFY_impl,
