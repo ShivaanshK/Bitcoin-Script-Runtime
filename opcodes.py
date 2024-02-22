@@ -798,7 +798,25 @@ def OP_NOP10_impl() -> None:
 
 
 def OP_CHECKSIGADD_impl() -> None:
-	return
+	public_key_bytes: bytes = encode_stack_element(global_stack.pop())
+	n: int = int(global_stack.pop())
+	sig_bytes: bytes = encode_stack_element(global_stack.pop())
+
+	if len(sig_bytes) == 0:
+		global_stack.push(str(n))
+		return	
+
+	public_key: ec.EllipticCurvePublicKey = load_der_public_key(public_key_bytes)
+
+	try:
+		public_key.verify(
+			sig_bytes,
+			b"UTXOs",
+			ec.ECDSA(hashes.SHA256())
+		)
+		global_stack.push(str(n + 1))
+	except:
+		raise ValueError("INVALID TRANSACTION - OP_CHECKSIGADD failed")
 
 
 def OP_INVALIDOPCODE_impl() -> None:
