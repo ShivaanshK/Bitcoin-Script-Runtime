@@ -2,6 +2,7 @@ import stack
 from Crypto.Hash import RIPEMD160, SHA256, SHA1
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.serialization import load_der_public_key
+from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives import hashes
 
 global_stack: stack.Stack = stack.Stack()
@@ -699,25 +700,44 @@ def OP_CHECKMULTISIG_impl() -> None:
 	# Pop Dummy Element (our map optimization). If 0: ignore the mapping; Else: use it
 	mapping: str = global_stack.pop()
 
-	# Check each signature against each public key. A public key can only match one signature.
-	for signature in signatures:
-		success: bool = False
-		for i in range(m):
-			try:
-				public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_keys[i])
-				public_key_loaded.verify(
-					signature,
-					b"UTXOs",
-					ec.ECDSA(hashes.SHA256())
-				)
-				public_keys.pop(i)
-				success = True
-				break
-			except:
-				pass
-		if not success:
+	if (mapping[0:2] == "0x"):
+		mapping = mapping[2:]
+		# Check if public key is used twice in the mapping
+		if len(set(mapping)) != len(mapping):
 			OP_0_impl()
 			return
+		# Check each signature against public key specified in the map
+		for i in range(len(signatures)):
+				try:
+					public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_keys[-(int(mapping[-(i + 1)], 16) + 1)])
+					public_key_loaded.verify(
+						signatures[i],
+						b"UTXOs",
+						ec.ECDSA(hashes.SHA256())
+					)
+				except:
+					OP_0_impl()
+					return
+	else:
+		# Check each signature against each public key. A public key can only match one signature.
+		for signature in signatures:
+			success: bool = False
+			for i in range(m):
+				try:
+					public_key_loaded: ec.EllipticCurvePublicKey = load_der_public_key(public_keys[i])
+					public_key_loaded.verify(
+						signature,
+						b"UTXOs",
+						ec.ECDSA(hashes.SHA256())
+					)
+					public_keys.pop(i)
+					success = True
+					break
+				except:
+					pass
+			if not success:
+				OP_0_impl()
+				return
 
 	OP_1_impl()
 
