@@ -1,3 +1,5 @@
+#!/usr/bin/env pypy3
+
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes, serialization
 import sys, random

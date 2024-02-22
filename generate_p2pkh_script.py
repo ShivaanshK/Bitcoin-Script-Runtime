@@ -1,3 +1,5 @@
+#!/usr/bin/env pypy3
+
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes, serialization
 from Crypto.Hash import RIPEMD160, SHA256
