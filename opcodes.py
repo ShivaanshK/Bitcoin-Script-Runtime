@@ -4,16 +4,15 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.serialization import load_der_public_key
 from cryptography.hazmat.primitives import hashes
 
-
 global_stack: stack.Stack = stack.Stack()
 alt_stack: stack.Stack = stack.Stack()
 
 
 def encode_stack_element(value: str) -> bytes:
-    if value.startswith("0x"):
-        return bytes.fromhex(value[2:])
-    else:
-        return value.encode("utf-8")
+	if value.startswith("0x"):
+		return bytes.fromhex(value[2:])
+	else:
+		return value.encode("utf-8")
 
 
 def OP_0_impl() -> None:
@@ -120,28 +119,50 @@ def OP_VER_impl() -> None:
 	return
 
 
+############## Control Flow ################
+BLOCK_NESTING = 1  # current depth of nested statement blocks, value of 1 is the "root." incremented by parser, NOT interpreter
+EXEC_STACK: list[bool] = [True]  # execution history of nested blocks
+
+
+def ctrl_flow_exec(instr: str) -> bool:
+	if instr in {"OP_IF", "OP_NOTIF", "OP_ELSE", "OP_ENDIF"}:
+		return True
+	else:
+		global EXEC_STACK
+		return EXEC_STACK[-1]
+
+
 def OP_IF_impl() -> None:
-	return
+	global EXEC_STACK, BLOCK_NESTING
+	if EXEC_STACK[-1]:
+		cond = global_stack.pop()
+		EXEC_STACK.append(convert_to_bool(cond))
+	BLOCK_NESTING += 1
 
 
 def OP_NOTIF_impl() -> None:
-	return
-
-
-def OP_VERIF_impl() -> None:
-	return
-
-
-def OP_VERNOTIF_impl() -> None:
-	return
+	global EXEC_STACK, BLOCK_NESTING
+	if EXEC_STACK[-1]:
+		cond = global_stack.pop()
+		EXEC_STACK.append(not convert_to_bool(cond))
+	BLOCK_NESTING += 1
 
 
 def OP_ELSE_impl() -> None:
-	return
+	global BLOCK_NESTING, EXEC_STACK
+	if len(EXEC_STACK) == 1:
+		raise ValueError("OP_ELSE located outside of OP_IF block")
+	if BLOCK_NESTING == len(EXEC_STACK):
+		EXEC_STACK[-1] = not EXEC_STACK[-1]
 
 
 def OP_ENDIF_impl() -> None:
-	return
+	global BLOCK_NESTING, EXEC_STACK
+	if len(EXEC_STACK) == 1:
+		raise ValueError("OP_ENDIF located outside of OP_IF block")
+	if len(EXEC_STACK) == BLOCK_NESTING:
+		EXEC_STACK.pop()
+	BLOCK_NESTING -= 1
 
 
 def OP_VERIFY_impl() -> None:
@@ -153,7 +174,7 @@ def OP_VERIFY_impl() -> None:
 
 
 def OP_RETURN_impl() -> None:
-	return
+	raise ValueError("INVALID TRANSACTION - OP_RETURN statement reached")
 
 
 ########## STACK ##############
@@ -601,6 +622,7 @@ def OP_WITHIN_impl() -> None:
 		pass
 	global_stack.push(result)
 
+
 ######### Crypto ############
 
 
@@ -673,7 +695,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 	signatures: list[bytes] = []
 	for i in range(n):
 		signatures.append(encode_stack_element(global_stack.pop()))
-	
+
 	# Pop Dummy Element (our map optimization). If 0: ignore the mapping; Else: use it
 	mapping: str = global_stack.pop()
 
@@ -698,8 +720,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 			return
 
 	OP_1_impl()
-	
-		
+
 
 def OP_CHECKMULTISIGVERIFY_impl() -> None:
 	OP_CHECKMULTISIG_impl()

@@ -23,6 +23,11 @@ def main(argv: list[str]) -> int:
 	print(prog)
 	for instr in prog:
 		print(instr)
+
+		if not opcodes.ctrl_flow_exec(instr):
+			# ignore statements within a negative IF block
+			continue
+
 		if opcodes.is_opcode(instr):
 			dispatch(instr)
 		else:
