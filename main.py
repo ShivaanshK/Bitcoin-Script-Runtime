@@ -32,6 +32,13 @@ def main(argv: list[str]) -> int:
 			MAIN_STACK.push(instr)
 		print(MAIN_STACK)
 
+
+	if MAIN_STACK.empty() or not opcodes.convert_to_bool(MAIN_STACK.pop()):
+		print("Invalid Transaction!")
+	else:
+		print("Valid Transaction!")
+		return 0
+
 	return 0
 
 
