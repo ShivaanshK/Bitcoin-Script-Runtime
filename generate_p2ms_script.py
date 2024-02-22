@@ -5,6 +5,8 @@ import sys, random
 # N of M Multisig
 N = int(sys.argv[1])
 M = int(sys.argv[2])
+# 0 if no mapping, 1 if mapping
+mapping_flag = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
 # Check values of M and N
 if M < 1 or N < 1:
@@ -37,8 +39,12 @@ for key in selected_keys:
 public_keys_hex = ["0x" + key.public_key().public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo).hex() for key in keys]
 script_sig = f" {N} " + " ".join(public_keys_hex) + f" {M} OP_CHECKMULTISIG"
 # Dummy Stack element is first element - We will use this to implement a mapping
-script_pub_key = f"{mapping} " + " ".join(signatures)
+script_pub_key = f"{mapping if mapping_flag else 'OP_0'} " + " ".join(signatures)
 p2ms = script_pub_key + script_sig
+
+print(public_keys_hex)
+print(signatures)
+print(mapping)
 
 # Write the P2MS script to a file
 with open("p2ms_script", "w") as file:

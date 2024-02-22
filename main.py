@@ -20,9 +20,7 @@ def dispatch(opc: str):
 
 def main(argv: list[str]) -> int:
 	prog = read_script(argv[1])
-	print(prog)
 	for instr in prog:
-		print(instr)
 		if opcodes.is_opcode(instr):
 			dispatch(instr)
 		else:
