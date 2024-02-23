@@ -4,9 +4,10 @@ import sys
 
 import stack
 import opcodes
+import time
 
 MAIN_STACK: stack.Stack = opcodes.global_stack
-
+TIME_FLAG: int = sys.argv[2] if len(sys.argv) > 2 else 0
 
 #  return list of each instruction in the program
 def read_script(filename: str) -> list[str]:
@@ -42,5 +43,15 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-	ret = main(sys.argv)
-	sys.exit(ret)
+	if TIME_FLAG:
+		num_runs: int = sys.argv[3] if len(sys.argv) > 3 else 1000
+		start_time: float = time.time()
+		for i in range(num_runs):
+			main(sys.argv)
+		end_time: float = time.time()
+		# Average time to run script in seconds
+		avg_time: float = (end_time - start_time) / num_runs
+		print(f"Average time/run for {num_runs} runs: {avg_time} seconds")
+	else:
+		main(sys.argv)
+	sys.exit(0)

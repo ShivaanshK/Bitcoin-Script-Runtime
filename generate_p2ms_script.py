@@ -7,15 +7,13 @@ import sys, random
 # N of M Multisig
 N = int(sys.argv[1])
 M = int(sys.argv[2])
-# 0 if no mapping, 1 if mapping
-mapping_flag = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
 # Check values of M and N
 if M < 1 or N < 1:
     print("N and M must be > 1!")
     sys.exit(1)
-if M > 3:
-    print("M can be 3 at max!")
+if M > 15:
+    print("M can be 15 at max!")
     sys.exit(1)
 elif N > M:
     print("N has to be less than M!")
@@ -41,12 +39,15 @@ for key in selected_keys:
 public_keys_hex = ["0x" + key.public_key().public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo).hex() for key in keys]
 script_pub_key = f" {N} " + " ".join(public_keys_hex) + f" {M} OP_CHECKMULTISIG"
 # Dummy Stack element is first element - We will use this to implement a mapping
-script_sig = f"{mapping if mapping_flag else 'OP_0'} " + " ".join(signatures)
-p2ms = script_sig + script_pub_key
+script_sig_mapping = f"{mapping} " + " ".join(signatures)
+script_sig_no_mapping = "OP_0 " + " ".join(signatures)
 
 # Write the P2MS script to a file
+with open("p2ms_script_mapping", "w") as file:
+    file.write(script_sig_mapping + script_pub_key)
+
 with open("p2ms_script", "w") as file:
-    file.write(p2ms)
+    file.write(script_sig_no_mapping + script_pub_key)
 
-print("P2MS script written to file 'p2ms_script'")
-
+print("P2MS script with mapping written to file 'p2ms_script_mapping'")
+print("P2MS script without mapping written to file 'p2ms_script'")
