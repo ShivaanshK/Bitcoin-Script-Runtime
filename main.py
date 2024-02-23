@@ -37,7 +37,6 @@ def main(argv: list[str]) -> int:
 		print("Invalid Transaction!")
 	else:
 		print("Valid Transaction!")
-		return 0
 
 	return 0
 
