@@ -2,7 +2,6 @@ import stack
 from Crypto.Hash import RIPEMD160, SHA256, SHA1
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.serialization import load_der_public_key
-from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives import hashes
 
 global_stack: stack.Stack = stack.Stack()
@@ -699,7 +698,7 @@ def OP_CHECKMULTISIG_impl() -> None:
 	for i in range(n):
 		signatures.append(encode_stack_element(global_stack.pop()))
 
-	# Pop Dummy Element (our map optimization). If 0: ignore the mapping; Else: use it
+	# Pop Dummy Element (our map optimization). If hex value: use it; Else: ignore the mapping
 	mapping: str = global_stack.pop()
 
 	if (mapping[0:2] == "0x"):
