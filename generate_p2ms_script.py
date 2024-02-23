@@ -39,14 +39,10 @@ for key in selected_keys:
 
 # Generate Script
 public_keys_hex = ["0x" + key.public_key().public_bytes(encoding=serialization.Encoding.DER, format=serialization.PublicFormat.SubjectPublicKeyInfo).hex() for key in keys]
-script_sig = f" {N} " + " ".join(public_keys_hex) + f" {M} OP_CHECKMULTISIG"
+script_pub_key = f" {N} " + " ".join(public_keys_hex) + f" {M} OP_CHECKMULTISIG"
 # Dummy Stack element is first element - We will use this to implement a mapping
-script_pub_key = f"{mapping if mapping_flag else 'OP_0'} " + " ".join(signatures)
-p2ms = script_pub_key + script_sig
-
-print(public_keys_hex)
-print(signatures)
-print(mapping)
+script_sig = f"{mapping if mapping_flag else 'OP_0'} " + " ".join(signatures)
+p2ms = script_sig + script_pub_key
 
 # Write the P2MS script to a file
 with open("p2ms_script", "w") as file:
