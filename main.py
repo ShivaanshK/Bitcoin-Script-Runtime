@@ -7,7 +7,7 @@ import opcodes
 import time
 
 MAIN_STACK: stack.Stack = opcodes.global_stack
-TIME_FLAG: int = sys.argv[2] if len(sys.argv) > 2 else 0
+TIME_FLAG: int = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 
 #  return list of each instruction in the program
 def read_script(filename: str) -> list[str]:
@@ -37,7 +37,7 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
 	if TIME_FLAG:
-		num_runs: int = sys.argv[3] if len(sys.argv) > 3 else 1000
+		num_runs: int = int(sys.argv[3]) if len(sys.argv) > 3 else 1000
 		start_time: float = time.time()
 		for i in range(num_runs):
 			main(sys.argv)
@@ -52,5 +52,5 @@ if __name__ == "__main__":
 		print("Invalid Transaction!")
 	else:
 		print("Valid Transaction!")
-		
+
 	sys.exit(0)
