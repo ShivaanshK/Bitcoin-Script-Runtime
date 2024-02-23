@@ -32,13 +32,6 @@ def main(argv: list[str]) -> int:
 		else:
 			MAIN_STACK.push(instr)
 		print(MAIN_STACK)
-
-
-	if MAIN_STACK.empty() or not opcodes.convert_to_bool(MAIN_STACK.pop()):
-		print("Invalid Transaction!")
-	else:
-		print("Valid Transaction!")
-
 	return 0
 
 
@@ -51,7 +44,13 @@ if __name__ == "__main__":
 		end_time: float = time.time()
 		# Average time to run script in seconds
 		avg_time: float = (end_time - start_time) / num_runs
-		print(f"Average time/run for {num_runs} runs: {avg_time} seconds")
+		print(f"Average time per run for {num_runs} runs: {avg_time} seconds")
 	else:
 		main(sys.argv)
+	
+	if MAIN_STACK.empty() or not opcodes.convert_to_bool(MAIN_STACK.pop()):
+		print("Invalid Transaction!")
+	else:
+		print("Valid Transaction!")
+		
 	sys.exit(0)
