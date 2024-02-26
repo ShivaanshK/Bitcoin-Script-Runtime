@@ -4,7 +4,7 @@ import sys
 import matplotlib.pyplot as plt
 
 # Check for command-line argument for number of runs, default to 1000 if not provided
-num_runs = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
+num_runs = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
 
 # Measure performance function
 def measure_performance(script_file, num_runs):
@@ -47,7 +47,7 @@ def main():
     for m in range(1, 16):  # M can be 15 at max
         for n in range(1, m + 1):  # N has to be less than or equal to M
             total_time_mapping, total_time_no_mapping = 0, 0
-            num_scripts = 5
+            num_scripts = int(sys.argv[1]) if len(sys.argv) > 1 else 5
             for _ in range(num_scripts):  # Generate and execute 10 scripts per combination
                 generate_script_cmd = f'./generate_p2ms_script.py {n} {m}'
                 subprocess.run(generate_script_cmd, shell=True)  # Generate script
