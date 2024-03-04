@@ -57,8 +57,6 @@ With the virtual environment activated, you can now install project dependencies
 pip install -r requirements.txt
 ```
 
-Replace `requirements.txt` with the path to a file containing a list of items to be installed using `pip install`. If your project does not have a `requirements.txt` file, you can install dependencies as needed using `pip install package_name`.
-
 ### Running the Project
 
 ```sh
