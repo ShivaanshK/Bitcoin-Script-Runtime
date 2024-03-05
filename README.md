@@ -9,6 +9,12 @@ Our project outcome is meant to be twofold. First, we will implement an approxim
 
 ---
 
+# Performance Results for OP_CHECKMULTISIG
+
+![plot](./p2ms_performance_comparison.png)
+
+---
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
