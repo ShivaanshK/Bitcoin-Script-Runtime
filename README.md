@@ -5,7 +5,7 @@ Bitcoin was the first practical implementation of a purely electronic payment sy
 
 Our project outcome is meant to be twofold. First, we will implement an approximation of the Bitcoin script runtime in Python to develop a deep understanding of the opcodes, stack machine, and capabilities of contracts. Second, we will attempt to turn an ostensible bug in the Bitcoin core implementation into a feature which will speed up execution of scripts containing the `OP_CHECKMULTISIG` opcode. Current Bitcoin scripts that use the `OP_CHECKMULTISIG` opcode require the input script to contain a dummy stack element which has no effect on the execution of the script. This is believed to be a bug in the Bitcoin core implementation and has existed since its inception. Because this opcode must check signature(s) against multiple public keys, we intend to utilize the dummy stack entry to specify a map of signatures and public keys to speed up execution of the `OP_CHECKMULTISIG` opcode. 
 
-**Note:** Vanilla BTC scripts support n of 3, P2SH support n of 15, and P2TR support n of 20 multisig contracts.
+**Note:** Vanilla BTC scripts support n of 3 and P2SH support n of 15 multisig contracts.
 
 ---
 
