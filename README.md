@@ -10,6 +10,7 @@ Our project outcome is meant to be twofold. First, we will implement an approxim
 ---
 
 ## Performance Results for OP_CHECKMULTISIG
+The graph below depicts the performance results for 100 runs of 50 unique multisig scripts for each combination of N and M. On average using the mapping improved performance by a factor of 3.66.
 
 ![plot](./p2ms_performance_comparison.png)
 
